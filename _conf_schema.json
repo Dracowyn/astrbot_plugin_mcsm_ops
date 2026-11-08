@@ -1,0 +1,90 @@
+{
+  "panel_url": {
+    "type": "string",
+    "default": "",
+    "description": "MCSManager 面板地址",
+    "hint": "例如 https://panel.example.com:23333，不带末尾斜杠"
+  },
+  "api_key": {
+    "type": "string",
+    "default": "",
+    "description": "面板 API 密钥",
+    "hint": "在面板「用户设置」生成；建议建一个只分配本实例的普通用户；需在面板设置中开启 API 密钥"
+  },
+  "daemon_id": {
+    "type": "string",
+    "default": "",
+    "description": "节点 ID（daemonId）"
+  },
+  "instance_uuid": {
+    "type": "string",
+    "default": "",
+    "description": "实例 UUID"
+  },
+  "allowed_platforms": {
+    "type": "list",
+    "default": [
+      "aiocqhttp"
+    ],
+    "description": "允许的平台适配器名",
+    "hint": "按 event.get_platform_name() 检查；不要加入来自游戏的 mcqq 适配器"
+  },
+  "request_timeout_seconds": {
+    "type": "int",
+    "default": 10,
+    "description": "请求超时（秒）"
+  },
+  "command_wait_seconds": {
+    "type": "float",
+    "default": 1.5,
+    "description": "命令回读等待（秒）",
+    "hint": "最少使用 0.6 秒，以等待 daemon 刷盘"
+  },
+  "log_fetch_kb": {
+    "type": "int",
+    "default": 64,
+    "description": "每次读取日志大小（KB）"
+  },
+  "log_default_lines": {
+    "type": "int",
+    "default": 20,
+    "description": "默认日志行数"
+  },
+  "log_max_lines": {
+    "type": "int",
+    "default": 100,
+    "description": "最大日志行数"
+  },
+  "log_mask_ip": {
+    "type": "bool",
+    "default": true,
+    "description": "将日志和命令输出中的 IPv4 替换为 *.*.*.*"
+  },
+  "list_command": {
+    "type": "string",
+    "default": "list",
+    "description": "查询在线玩家的控制台命令"
+  },
+  "list_regex": {
+    "type": "string",
+    "default": "\\]: There are (\\d+) of a max of (\\d+) players online:\\s*(.*)$",
+    "description": "在线列表正则（组 1 在线数，组 2 上限，组 3 玩家名）",
+    "hint": "以「]: 」开头锚定服务器自身输出，防止玩家在聊天里伪造结果"
+  },
+  "tps_command": {
+    "type": "string",
+    "default": "neoforge tps",
+    "description": "查询 TPS 命令，留空禁用"
+  },
+  "tps_regex": {
+    "type": "string",
+    "default": "\\]: Overall:\\s*([\\d.]+)\\s*TPS\\s*\\(([\\d.]+)\\s*ms/tick\\)",
+    "description": "TPS 正则（组 1 TPS，组 2 MSPT）",
+    "hint": "以「]: 」开头锚定服务器自身输出，防止玩家在聊天里伪造结果"
+  },
+  "op_wait_seconds": {
+    "type": "int",
+    "default": 240,
+    "description": "启停后台轮询最长等待时间（秒）"
+  }
+}

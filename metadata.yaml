@@ -1,0 +1,9 @@
+name: astrbot_plugin_mcsm_ops
+author: dracowyn
+version: 0.1.0
+desc: 通过 MCSManager 面板查询 Minecraft 服务器状态、在线玩家、TPS 与日志，并远程执行命令和启停实例
+short_desc: MCSManager 服务器运维
+repo: https://github.com/Dracowyn/astrbot_plugin_mcsm_ops
+support_platforms:
+  - aiocqhttp
+astrbot_version: ">=4.16,<5"
