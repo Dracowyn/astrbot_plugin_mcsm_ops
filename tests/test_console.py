@@ -47,7 +47,8 @@ def test_list0():
     assert (
         console.parse_list(["unrelated output"], console.DEFAULT_LIST_PATTERN) is None
     )
-    spoof = "]: <Bob> There are 9 of a max of 9 players online: ad"
+    # A player can type "]: There are ..." inside a chat message.
+    spoof = "[t] [Server thread/INFO] [m/]: <Bob> x ]: There are 9 of a max of 9 players online: ad"
     assert console.parse_list([spoof], console.DEFAULT_LIST_PATTERN) is None
 
 

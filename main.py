@@ -77,6 +77,23 @@ class Plugin(Star):
         """
         return self.client.redact(text)
 
+    def _render_lines(self, lines):
+        """Redact each full line, then bound line and total length for QQ.
+
+        Redaction runs before any slicing so that truncation can never leave a
+        partial credential or IP address that the patterns no longer match.
+
+        Args:
+            lines: Cleaned console lines.
+
+        Returns:
+            Display text, at most MAX_OUTPUT_CHARS characters.
+        """
+        mask = self.config.get("log_mask_ip", True)
+        safe = [self._safe_text(line) for line in lines]
+        safe = [mask_ip(line) if mask else line for line in safe]
+        return "\n".join(line[:MAX_LINE_CHARS] for line in safe)[-MAX_OUTPUT_CHARS:]
+
     def _error(self, exc):
         """Log a sanitized failure and return the corresponding user message.
 
@@ -213,7 +230,9 @@ class Plugin(Star):
                     if count
                     else f"当前没有玩家在线（0/{maximum}）"
                 )
-            yield event.plain_result(self._safe_text(text))
+            # Player names come from console text: redact and mask before bounding.
+            text = mask_ip(self._safe_text(text))[:MAX_OUTPUT_CHARS]
+            yield event.plain_result(text)
         except Exception as exc:
             yield event.plain_result(self._error(exc))
 
@@ -243,11 +262,7 @@ class Plugin(Star):
             if not lines:
                 yield event.plain_result("没有匹配的日志")
                 return
-            # Bound line and total length so long stack traces stay under QQ limits.
-            text = "\n".join(line[:MAX_LINE_CHARS] for line in lines)
-            text = self._safe_text(text[-MAX_OUTPUT_CHARS:])
-            if self.config.get("log_mask_ip", True):
-                text = mask_ip(text)
+            text = self._render_lines(lines)
             if event.get_platform_name() == "aiocqhttp":
                 node = Comp.Node(
                     uin=event.get_self_id(),
@@ -290,17 +305,7 @@ class Plugin(Star):
                 yield event.plain_result("用法：/mcs cmd <命令>")
                 return
             lines, rotated = await self._read_command(command)
-            text = (
-                self._safe_text(
-                    "\n".join(line[:MAX_LINE_CHARS] for line in lines[-30:])[
-                        -MAX_OUTPUT_CHARS:
-                    ]
-                )
-                if lines
-                else "命令已发送，无输出"
-            )
-            if self.config.get("log_mask_ip", True):
-                text = mask_ip(text)
+            text = self._render_lines(lines[-30:]) if lines else "命令已发送，无输出"
             if rotated:
                 text += "\n日志已轮转，结果可能不完整"
             yield event.plain_result(text)

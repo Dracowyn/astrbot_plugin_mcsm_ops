@@ -4,7 +4,8 @@ import asyncio
 from types import SimpleNamespace
 
 import pytest
-from astrbot_plugin_mcsm_ops.main import Plugin
+from astrbot_plugin_mcsm_ops.main import MAX_LINE_CHARS, Plugin
+from astrbot_plugin_mcsm_ops.mcsm_client import McsmClient
 
 
 class FakeEvent:
@@ -135,3 +136,12 @@ def test_stop_requires_confirmation(plugin):
     replies = asyncio.run(collect(plugin.stop(FakeEvent("/mcs stop"))))
     assert replies == ["此操作会让在线玩家掉线，确认请发送 /mcs stop 确认"]
     assert plugin.client.stops == 0
+
+
+def test_render_redacts_before_truncating(plugin):
+    plugin.client = McsmClient("https://example.invalid", "test-credential", "n", "i")
+    for secret in ("test-credential", "10.20.30.40"):
+        # Place the secret so the per-line cut would split it in half.
+        line = "a" * (MAX_LINE_CHARS - 6) + secret
+        text = plugin._render_lines([line])
+        assert secret[:6] not in text

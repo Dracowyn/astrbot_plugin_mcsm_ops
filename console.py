@@ -3,9 +3,14 @@
 import math
 import re
 
-# Anchored to "]: " so that player chat ("]: <Name> There are ...") cannot spoof results.
-DEFAULT_LIST_PATTERN = r"\]: There are (\d+) of a max of (\d+) players online:\s*(.*)$"
-DEFAULT_TPS_PATTERN = r"\]: Overall:\s*([\d.]+)\s*TPS\s*\(([\d.]+)\s*ms/tick\)"
+# Anchored at line start: only the "[...] [...]: " log prefix may precede the text,
+# so player chat ("...]: <Name> x ]: There are ...") cannot spoof results.
+DEFAULT_LIST_PATTERN = (
+    r"^(?:\[[^\]]*\]\s*)+: There are (\d+) of a max of (\d+) players online:\s*(.*)$"
+)
+DEFAULT_TPS_PATTERN = (
+    r"^(?:\[[^\]]*\]\s*)+: Overall:\s*([\d.]+)\s*TPS\s*\(([\d.]+)\s*ms/tick\)"
+)
 
 _ANSI_PATTERN = re.compile(r"\x1b\[[0-9;?]*[ -/]*[@-~]")
 _COLOR_PATTERN = re.compile(r"§.")

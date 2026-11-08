@@ -67,9 +67,9 @@
   },
   "list_regex": {
     "type": "string",
-    "default": "\\]: There are (\\d+) of a max of (\\d+) players online:\\s*(.*)$",
+    "default": "^(?:\\[[^\\]]*\\]\\s*)+: There are (\\d+) of a max of (\\d+) players online:\\s*(.*)$",
     "description": "在线列表正则（组 1 在线数，组 2 上限，组 3 玩家名）",
-    "hint": "以「]: 」开头锚定服务器自身输出，防止玩家在聊天里伪造结果"
+    "hint": "从行首锚定：只允许日志前缀「[...] [...]: 」出现在文字前，防止玩家在聊天里伪造结果"
   },
   "tps_command": {
     "type": "string",
@@ -78,9 +78,9 @@
   },
   "tps_regex": {
     "type": "string",
-    "default": "\\]: Overall:\\s*([\\d.]+)\\s*TPS\\s*\\(([\\d.]+)\\s*ms/tick\\)",
+    "default": "^(?:\\[[^\\]]*\\]\\s*)+: Overall:\\s*([\\d.]+)\\s*TPS\\s*\\(([\\d.]+)\\s*ms/tick\\)",
     "description": "TPS 正则（组 1 TPS，组 2 MSPT）",
-    "hint": "以「]: 」开头锚定服务器自身输出，防止玩家在聊天里伪造结果"
+    "hint": "从行首锚定：只允许日志前缀「[...] [...]: 」出现在文字前，防止玩家在聊天里伪造结果"
   },
   "op_wait_seconds": {
     "type": "int",
