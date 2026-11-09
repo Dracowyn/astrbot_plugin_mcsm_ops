@@ -12,6 +12,21 @@ DEFAULT_TPS_PATTERN = (
     r"^(?:\[[^\]]*\]\s*)+: Overall:\s*([\d.]+)\s*TPS\s*\(([\d.]+)\s*ms/tick\)"
 )
 
+# Lines players can author or that expose them (chat, emotes, joins with IPs
+# and coordinates). Dropped from anything returned to the LLM, which may relay
+# it to other groups or games and would otherwise ingest injected chat.
+CHATTER_PATTERN = re.compile(
+    r"^(?:\[[^\]]*\]\s*)+: (?:\[Not Secure\] )?[<*]"
+    r"|logged in with entity id|lost connection:|joined the game|left the game"
+    r"|UUID of player",
+    re.IGNORECASE,
+)
+# Server lifecycle lines, anchored like the parsers so chat cannot fake them.
+SERVER_STOP_PATTERN = re.compile(
+    r"^(?:\[[^\]]*\]\s*)+: Stopping (?:the )?server$", re.IGNORECASE
+)
+SERVER_DONE_PATTERN = re.compile(r"^(?:\[[^\]]*\]\s*)+: Done \(", re.IGNORECASE)
+
 _ANSI_PATTERN = re.compile(r"\x1b\[[0-9;?]*[ -/]*[@-~]")
 _COLOR_PATTERN = re.compile(r"§.")
 # Lookarounds instead of \b: CJK characters count as word characters.

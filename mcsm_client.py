@@ -110,7 +110,7 @@ class McsmClient:
         ):
             raise McsmError("MCSManager 返回了无效的响应格式。") from None
         if not http_success or payload["status"] != 200:
-            raise McsmError(self.redact(payload["data"])[:200]) from None
+            raise McsmError(self.redact(payload["data"])) from None
         return payload["data"]
 
     async def detail(self) -> dict[str, Any]:

@@ -11,15 +11,57 @@
     "description": "面板 API 密钥",
     "hint": "在面板「用户设置」生成；建议建一个只分配本实例的普通用户；需在面板设置中开启 API 密钥"
   },
-  "daemon_id": {
-    "type": "string",
-    "default": "",
-    "description": "节点 ID（daemonId）"
-  },
-  "instance_uuid": {
-    "type": "string",
-    "default": "",
-    "description": "实例 UUID"
+  "instances": {
+    "type": "template_list",
+    "default": [],
+    "description": "Minecraft 实例",
+    "templates": {
+      "instance": {
+        "name": "实例",
+        "display_item": "alias",
+        "items": {
+          "alias": {
+            "type": "string",
+            "default": "",
+            "description": "实例别名",
+            "hint": "指令里用来指定实例，例如 生存；不能含空格，不能叫 all"
+          },
+          "daemon_id": {
+            "type": "string",
+            "default": "",
+            "description": "节点 ID（daemonId）"
+          },
+          "instance_uuid": {
+            "type": "string",
+            "default": "",
+            "description": "实例 UUID"
+          },
+          "groups": {
+            "type": "list",
+            "default": [],
+            "description": "绑定的 QQ 群号",
+            "hint": "同一个群可以出现在多个实例里；不在任何实例里的群无法使用 /mcs"
+          },
+          "tps_command": {
+            "type": "string",
+            "default": "neoforge tps",
+            "description": "查询 TPS 命令",
+            "hint": "Paper 用 tps；留空则不查询 TPS"
+          },
+          "tps_regex": {
+            "type": "string",
+            "default": "^(?:\\[[^\\]]*\\]\\s*)+: Overall:\\s*([\\d.]+)\\s*TPS\\s*\\(([\\d.]+)\\s*ms/tick\\)",
+            "description": "TPS 正则（组 1 TPS，组 2 MSPT）",
+            "hint": "从行首锚定：只允许日志前缀「[...] [...]: 」出现在文字前，防止玩家在聊天里伪造结果"
+          },
+          "alert_enabled": {
+            "type": "bool",
+            "default": true,
+            "description": "启用实例崩溃告警"
+          }
+        }
+      }
+    }
   },
   "allowed_platforms": {
     "type": "list",
@@ -71,16 +113,23 @@
     "description": "在线列表正则（组 1 在线数，组 2 上限，组 3 玩家名）",
     "hint": "从行首锚定：只允许日志前缀「[...] [...]: 」出现在文字前，防止玩家在聊天里伪造结果"
   },
-  "tps_command": {
-    "type": "string",
-    "default": "neoforge tps",
-    "description": "查询 TPS 命令，留空禁用"
+  "alert_interval_seconds": {
+    "type": "int",
+    "default": 30,
+    "description": "告警轮询间隔（秒）",
+    "hint": "最小 10"
   },
-  "tps_regex": {
+  "platform_id": {
     "type": "string",
-    "default": "^(?:\\[[^\\]]*\\]\\s*)+: Overall:\\s*([\\d.]+)\\s*TPS\\s*\\(([\\d.]+)\\s*ms/tick\\)",
-    "description": "TPS 正则（组 1 TPS，组 2 MSPT）",
-    "hint": "从行首锚定：只允许日志前缀「[...] [...]: 」出现在文字前，防止玩家在聊天里伪造结果"
+    "default": "",
+    "description": "告警推送平台 ID",
+    "hint": "QQ 平台适配器的 ID，用于推送告警；留空时自动使用唯一的 aiocqhttp 适配器"
+  },
+  "llm_allowed_commands": {
+    "type": "list",
+    "default": ["list", "neoforge tps", "spark tps", "spark health"],
+    "description": "LLM 只读命令白名单",
+    "hint": "LLM 只能执行与列表某项完全一致的命令，不能带额外参数；需要参数就把完整命令写进来。不要加入 spark profiler、op、stop 等有副作用的命令"
   },
   "op_wait_seconds": {
     "type": "int",
