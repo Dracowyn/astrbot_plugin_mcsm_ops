@@ -12,13 +12,23 @@ DEFAULT_TPS_PATTERN = (
     r"^(?:\[[^\]]*\]\s*)+: Overall:\s*([\d.]+)\s*TPS\s*\(([\d.]+)\s*ms/tick\)"
 )
 
-# Lines players can author or that expose them (chat, emotes, joins with IPs
-# and coordinates). Dropped from anything returned to the LLM, which may relay
-# it to other groups or games and would otherwise ingest injected chat.
+# Lines players can author or that expose them: chat, emotes, /say, commands
+# players issue (/msg text, /tp coordinates), joins with IPs, advancements and
+# death messages (which can carry anvil-renamed item names). Dropped from
+# anything returned to the LLM, which may relay it to other groups or games and
+# would otherwise ingest injected text. This is a denylist and cannot be
+# complete; parsed list/TPS results are the safe path.
 CHATTER_PATTERN = re.compile(
-    r"^(?:\[[^\]]*\]\s*)+: (?:\[Not Secure\] )?[<*]"
+    r"^(?:\[[^\]]*\]\s*)+: (?:[<*]|\[[A-Za-z0-9_]{3,16}\] )"
+    r"|\[Not Secure\]|issued server command"
     r"|logged in with entity id|lost connection:|joined the game|left the game"
-    r"|UUID of player",
+    r"|UUID of player|has made the advancement|has completed the challenge"
+    r"|has reached the goal| using \[| whilst |was (?:slain|shot|killed|blown up"
+    r"|fireballed|pummeled|impaled|squashed|squished|stung|skewered|poked|frozen"
+    r"|obliterated|struck by lightning|doomed|pricked|roasted)"
+    r"| (?:drowned|died|fell |burned to death|starved|suffocated|withered away"
+    r"|hit the ground too hard|tried to swim in lava|went up in flames|blew up"
+    r"|froze to death|experienced kinetic energy|discovered the floor was lava)",
     re.IGNORECASE,
 )
 # Server lifecycle lines, anchored like the parsers so chat cannot fake them.
