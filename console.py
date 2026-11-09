@@ -27,6 +27,8 @@ CHATTER_PATTERN = re.compile(
     # Any bracketed name in the message body (renamed items, hover components);
     # spark's own "[⚡]" prefix is the only bracket allowed.
     r"|^(?:\[[^\]]*\]\s*)+: (?:\[⚡\]\s*)?(?!\[⚡\])[^\[]*\["
+    # Unanchored fallbacks for log formats without a bracketed prefix.
+    r"| using \[| with \[| from \[| by \["
     r"| whilst |went off with a bang|was spitballed|was smashed"
     r"|was (?:slain|shot|killed|blown up"
     r"|fireballed|pummeled|impaled|squashed|squished|stung|skewered|poked|frozen"
