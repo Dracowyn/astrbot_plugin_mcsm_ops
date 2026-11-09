@@ -23,7 +23,12 @@ CHATTER_PATTERN = re.compile(
     r"|\[Not Secure\]|issued server command"
     r"|logged in with entity id|lost connection:|joined the game|left the game"
     r"|UUID of player|has made the advancement|has completed the challenge"
-    r"|has reached the goal| using \[| whilst |was (?:slain|shot|killed|blown up"
+    r"|has reached the goal"
+    # Any bracketed name in the message body (renamed items, hover components);
+    # spark's own "[⚡]" prefix is the only bracket allowed.
+    r"|^(?:\[[^\]]*\]\s*)+: (?:\[⚡\]\s*)?(?!\[⚡\])[^\[]*\["
+    r"| whilst |went off with a bang|was spitballed|was smashed"
+    r"|was (?:slain|shot|killed|blown up"
     r"|fireballed|pummeled|impaled|squashed|squished|stung|skewered|poked|frozen"
     r"|obliterated|struck by lightning|doomed|pricked|roasted)"
     r"| (?:drowned|died|fell |burned to death|starved|suffocated|withered away"

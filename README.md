@@ -1,6 +1,6 @@
 # MCSManager 服务器运维
 
-`astrbot_plugin_mcsm_ops` v0.2.1，适用于 AstrBot `>=4.16,<5`、OneBot v11 / aiocqhttp、MCSManager 10.22.1 和 NeoForge Minecraft 服务端。
+`astrbot_plugin_mcsm_ops` v0.2.2，适用于 AstrBot `>=4.16,<5`、OneBot v11 / aiocqhttp、MCSManager 10.22.1 和 NeoForge Minecraft 服务端。
 
 通过面板 REST API 管理多个实例：查询状态、玩家、TPS、控制台日志，执行命令、启停、管理白名单，并向绑定群推送崩溃告警。提供受限的 LLM 只读工具。**不做聊天互通**；聊天互通继续由 mcqq 与鹊桥模组负责。
 
@@ -132,6 +132,10 @@ API 密钥只通过 `x-request-api-key` 请求头发送，不放入 URL 查询�
 测试不启动 AstrBot，也不连接面板。
 
 ## 版本记录
+
+### 0.2.2
+
+- 安全加固：LLM 白名单命令输出中，正文带方括号名称的行（改名物品、悬停组件）一律丢弃，并补充更多死亡信息格式。
 
 ### 0.2.1
 
